@@ -1,0 +1,32 @@
+version: "3.6"
+
+services:
+  db:
+    image: yobasystems/alpine-mariadb:10
+    environment:
+      - MYSQL_DATABASE=twe
+      - MYSQL_USER=twe
+      - MYSQL_PASSWORD=twepass
+    ports:
+      - 3306:3306 # debugging
+  api:
+    image: binaryconstruct/terraria-map-editor-api:latest
+    build: .
+    ports:
+      - 3000:3000 # dubugging
+    environment:
+      - DB_USER=twe
+      - DB_PASS=twepass
+      - DB_PORT=3306
+      - DB_NAME=twe
+      - DB_HOST=db
+  web:
+    image: binaryconstruct/terraria-map-editor:latest
+    ports:
+      - 8080:8080 # dubugging
+  nginx:
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./docker/nginx:/etc/nginx
